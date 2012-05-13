@@ -14,8 +14,10 @@ a small and predictable error rate.
 This makes them a very useful tool for large scale data mining, as a component
 in:
 
-* fuzzy-matching database records or similar documents nearest-neighbours
-* clustering and classification duplicate detection content recommendation
+* fuzzy-matching database records or similar documents
+* nearest-neighbours clustering and classification
+* duplicate detection
+* content recommendation
 
 et cetera.
 
