@@ -1,9 +1,19 @@
-import random
-from array import array
-
-# Possible improvements:
+# Tools for locality-sensitive hashing.
 #
-# - Bit-field instead of array to hold the hyperplanes
+# https://github.com/andrewclegg/sketchy
+#
+# Tested on Jython 2.5.2, should work on cpython 2.5+ except for the
+# Hamming distance methods which need bit() from 2.6. Feel free to
+# add your own retro versions. Haven't tested it on Python 3 yet.
+
+import random
+import sys
+from array import array # Consider some sort of bitfield instead?
+
+# Kludge around the function decorator that Pig injects, with a dummy.
+if 'outputSchema' not in globals():
+    def outputSchema(x):
+        return lambda(y): y
 
 planes = None
 
@@ -39,4 +49,18 @@ def sparse_random_projection(sv, size, dim, seed):
     dps = [sparse_dot_product(sv, plane) for plane in planes]
     return sum([2**i if dps[i] > 0 else 0 for i in xrange(0, len(dps))])
 
+
+
+
+if 'Java' in sys.version:
+    import java.lang.Integer as Integer
+    import java.lang.Long as Long
+    def hamming32(i1, i2):
+        return Integer.bitCount(i1^i2)
+    def hamming64(l1, l2):
+        return Long.bitCount(l1^l2)
+else:
+    def hamming32(i1, i2):
+        return bin(i1^i2).count('1')
+    hamming64 = hamming32
 

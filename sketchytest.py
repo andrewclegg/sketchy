@@ -2,10 +2,6 @@ import unittest
 from array import array
 import __builtin__
 
-# Kludge around the function decorators that Pig injects.
-# I feel strangely dirty.
-__builtin__.outputSchema = lambda(x) : lambda(y) : y
-
 import sketchy
 
 class TestSketchy(unittest.TestCase):
