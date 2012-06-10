@@ -10,15 +10,17 @@ import random
 import sys
 from array import array # Consider some sort of bitfield instead?
 
+
 # Kludge around the function decorator that Pig injects, with a dummy.
 if 'outputSchema' not in globals():
     def outputSchema(x):
         return lambda(y): y
 
+
 planes = None
 
 """ Create 'size' planes in a 'dim'-dimensional space, with a new random
-    number generator using 'seed'."""
+    number generator using 'seed'. """
 def make_planes(size, dim, seed):
     random.seed(seed)
     p = []
@@ -26,10 +28,27 @@ def make_planes(size, dim, seed):
         p.append(array('b', (random.choice((-1, 1)) for i in xrange(0, dim))))
     return p
 
+""" Calculate cosine similarity of two sparse vectors. """
+def sparse_cos_sim(sv1, sv2):
+    return sparse_dot_product(sv1, sv2) / (sparse_magnitude(v1) * sparse_random_projection(v2))
+
+""" Calculate dot product of two sparse vectors. """
+def sparse_dot_product(sv1, sv2):
+    d1 = dict(sv1)
+    d2 = dict(sv2)
+    tot = 0
+    for key in d1.keys().intersect(d2.keys()):
+        tot += d1[key] * d2[key]
+    return tot
+
+""" Calculate magnitude of a sparse vector. """
+def sparse_magnitude(sv):
+    return sum(v**2 for v in sv.values())**0.5
+
 """ Calculate dot product of a sparse vector 'sv' against a dense vector 'dv'.
     The sparse vector format is described below. No bounds checking is done,
-    so make sure it doesn't exceed the size of 'dv'."""
-def sparse_dot_product(sv, dv):
+    so make sure it doesn't exceed the size of 'dv'. """
+def mixed_dot_product(sv, dv):
     tot = 0
     for (idx, val) in sv:
         tot += val * dv[idx]
@@ -39,14 +58,14 @@ def sparse_dot_product(sv, dv):
     set of random planes defined by the other variables, using one bit for each
     plane. The vector should pe provided as a bag of (dimension, value) tuples.
     Only numeric values are supported, so you need to map words, categories etc.
-    yourself first."""
+    yourself first. """
 @outputSchema('lsh:long') # TODO make this dynamic based on size
 def sparse_random_projection(sv, size, dim, seed):
     # Create the planes if they don't already exist in this process
     global planes
     if planes is None:
         planes = make_planes(size, dim, seed)
-    dps = [sparse_dot_product(sv, plane) for plane in planes]
+    dps = [mixed_dot_product(sv, plane) for plane in planes]
     return sum([2**i if dps[i] > 0 else 0 for i in xrange(0, len(dps))])
 
 
