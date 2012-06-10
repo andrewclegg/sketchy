@@ -1,6 +1,6 @@
 #!/usr/bin/env python2.7
 
-# sketchy by @andrew_clegg, May 2012, public domain.
+# Original sketchy demo by @andrew_clegg, May 2012, public domain.
 #
 # https://github.com/andrewclegg/sketchy
 
