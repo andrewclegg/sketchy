@@ -47,7 +47,7 @@ class TestSketchy(unittest.TestCase):
         size = 32
         dim = 10
         seed = 23
-        
+        hashcode = sketchy.sparse_random_projection(sv, size, dim, seed)
 
 if __name__ == '__main__':
     unittest.main()

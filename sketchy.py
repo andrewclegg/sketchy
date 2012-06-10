@@ -33,6 +33,7 @@ def sparse_dot_product(sv, dv):
 @outputSchema('lsh:long') # TODO make this dynamic based on size
 def sparse_random_projection(sv, size, dim, seed):
     # Create the planes if they don't already exist in this process
+    global planes
     if planes is None:
         planes = make_planes(size, dim, seed)
     dps = [sparse_dot_product(sv, plane) for plane in planes]
