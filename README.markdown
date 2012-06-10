@@ -1,7 +1,8 @@
 sketchy
 =======
 
-A simple implementation of locality-sensitive hashing in Python.
+A simple implementation of locality-sensitive hashing in Python, with support
+for Pig.
 
 Say again?
 ----------
@@ -33,8 +34,9 @@ Jython compatibility, and uses no extra libraries.
 How does it work?
 -----------------
 
-This particular variant of LSH uses _sketches_, which are rough
-lower-dimensional representations of a point in higher-dimensional space.
+This particular variant of LSH uses _sketches_, aka random projection, which
+are rough lower-dimensional representations of a point in higher-dimensional
+space.
 
 It works by slicing up the space with a number of surfaces (hyperplanes), and
 seeing which side of each hyperplane the data point is on. This can be
@@ -63,15 +65,23 @@ http://metaoptimize.com/qa/questions/8930/basic-questions-about-locally-sensitiv
 
 http://www.coolsnap.net/kevin/?p=23
 
+http://en.wikipedia.org/wiki/Locality-sensitive_hashing#Random_projection
+
+There are other LSH methods out there and I hope to add some of them later.
+
 How do I use it?
 ----------------
 
-See the source for a demo. In fact, most of the file is demo. The
+See oldsketchy.py for a demo. In fact, most of the file is demo. The
 nuts-and-bolts are only a few lines of code. Just copy and paste the bits you
-need.
+need. There are comments explaining what's going on all the way through.
+
+The newer version of sketchy.py is a properly-tested module that also functions
+as a UDF under Pig. It's a work in progress and hasn't been properly tested
+yet.
 
 The use case I had in mind when I wrote it was for neighbour-finding /
-similarity-search in Pig. You could read in a dataset from HDFS, feed it
+similarity-search on Hadoop. You could read in a dataset from HDFS, feed it
 through sketchy on the mappers to get a hash for each record, and then join on
 matching hashes to get candidate matches. This gets round the classic data
 locality problem that stops some all-against-all search methods from
@@ -83,10 +93,9 @@ isn't too sparse.
 I haven't tried this yet though. If you find this useful, I'd love to hear about
 it.
 
-**Important:** If you do run it on a cluster, make sure to synchronize the
-random number generators on the machines, or else calculate the hyperplanes
-with make_planes first and ship them to each machine. Otherwise, each process
-will generate a different set of planes, and the results will be garbage.
+**Important:** If you do run it on a cluster, make sure to use the same random
+number seed everywhere. Otherwise, each process will generate a different set
+of hyperplanes, and the results will be garbage.
 
 Contact
 -------
@@ -98,5 +107,8 @@ https://github.com/andrewclegg/sketchy
 License
 -------
 
-Do what thou wilt.
+oldsketchy.py is in the public domain, everything else is (c) Andrew Clegg 2012
+and distributed under the Apache 2.0 License.
+
+http://www.apache.org/licenses/LICENSE-2.0.html
 
