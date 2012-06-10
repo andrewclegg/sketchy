@@ -55,6 +55,9 @@ def euc_dist(vec1, vec2):
     return (tot)**0.5
 
 # For testing only -- returns the hamming distance between two bitfields (as numbers).
+# It's from here:
+# http://stackoverflow.com/questions/109023/best-algorithm-to-count-the-number-of-set-bits-in-a-32-bit-integer#109025
+# and I have no idea why it works.
 def ham_dist(a, b):
     i = a ^ b
     i = i - ((i >> 1) & 0x55555555)
