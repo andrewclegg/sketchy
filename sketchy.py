@@ -30,20 +30,23 @@ def make_planes(size, dim, seed):
 
 """ Calculate cosine similarity of two sparse vectors. """
 def sparse_cos_sim(sv1, sv2):
-    return sparse_dot_product(sv1, sv2) / (sparse_magnitude(v1) * sparse_random_projection(v2))
+    mag_prod = sparse_magnitude(sv1) * sparse_magnitude(sv2)
+    if mag_prod == 0:
+        return 0
+    return sparse_dot_product(sv1, sv2) / mag_prod
 
 """ Calculate dot product of two sparse vectors. """
 def sparse_dot_product(sv1, sv2):
     d1 = dict(sv1)
     d2 = dict(sv2)
     tot = 0
-    for key in d1.keys().intersect(d2.keys()):
+    for key in set(d1.keys()).intersection(set(d2.keys())):
         tot += d1[key] * d2[key]
     return tot
 
 """ Calculate magnitude of a sparse vector. """
 def sparse_magnitude(sv):
-    return sum(v**2 for v in sv.values())**0.5
+    return sum(v**2 for (a, v) in sv)**0.5
 
 """ Calculate dot product of a sparse vector 'sv' against a dense vector 'dv'.
     The sparse vector format is described below. No bounds checking is done,
