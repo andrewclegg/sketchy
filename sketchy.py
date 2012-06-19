@@ -77,12 +77,15 @@ def sparse_random_projection(sv, size, dim, seed):
 if 'Java' in sys.version:
     import java.lang.Integer as Integer
     import java.lang.Long as Long
+    # TODO hamming8 and hamming16
     def hamming32(i1, i2):
         return Integer.bitCount(i1^i2)
     def hamming64(l1, l2):
         return Long.bitCount(l1^l2)
 else:
-    def hamming32(i1, i2):
+    def hamming8(i1, i2):
         return bin(i1^i2).count('1')
-    hamming64 = hamming32
+    hamming16 = hamming8
+    hamming32 = hamming8
+    hamming64 = hamming8
 
